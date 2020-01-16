@@ -6,6 +6,26 @@ var User = require('../models/User');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
+passport.serializeUser(function (user, done) {
+    done(null, user.id)
+});
+passport.deserializeUser(function (id, done) {
+    User.getUserById(id, function (err, user) {
+        done(err, user);
+    });
+});
+passport.use(new LocalStrategy((username,password,done)=>{
+    User.getUserByName(username,(err,user)=>{
+        if(err) throw error;
+        console.log('GET User');
+        console.log(user);
+        //res.redirect('/');
+    });
+}));
+
+
+/** Router */
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
     res.render('index', { title: 'Express' });
@@ -15,10 +35,11 @@ router.get('/', function (req, res, next) {
 router.get('/login', function (req, res, next) {
     res.render('authen/login', { title: '::Login::' });
 });
-router.post('/login', function (req, res, next) {
-    passport.authenticate('local',function(){
-        
-    })
+router.post('/login', passport.authenticate('local', {
+    failureRedirect: '/authen/register',
+    failureFlash: false
+}), function (req, res, next) {
+    res.redirect('/');
 });
 
 
