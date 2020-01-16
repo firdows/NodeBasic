@@ -30,10 +30,15 @@ router.post('/register', [
     if (!result.isEmpty()) {
         res.render('authen/register', { title: 'Register', errors: errors });
     }else{
-
+        var newUser = new User(req.body);
+        User.createUser(newUser,function(err,user){
+            if(err) throw err;
+        });
+        res.location("/");
+        res.redirect("/");
     }
     //console.log(req.body.email);
-    res.redirect('/');
+   // res.redirect('/');
 });
 
 module.exports = router;

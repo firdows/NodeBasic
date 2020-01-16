@@ -29,4 +29,6 @@ var userSchema = mongoose.Schema({
 });
 
 var User=module.exports=mongoose.model('User',userSchema);
-module.exports.createUser
+module.exports.createUser=function(newUser,callback){
+    newUser.save(callback);
+}
