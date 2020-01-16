@@ -1,0 +1,75 @@
+<%- include ../layout/header -%>
+
+
+<h1><%= title %></h1>
+
+<% if(locals.errors){ %>
+<div class="alert alert-warning">
+    <ul>
+
+        <% Object.values(errors).forEach(function(error){ %>
+        <li><%=error.msg%></li>
+        <% })  %>
+
+    </ul>
+</div>
+<% } %>
+
+<form action="" method="post" class="form-group">
+
+
+
+    <div class="row">
+        <div class="col">
+
+            <div class="form-group">
+                <label class="">
+                    E-mail
+                </label>
+                <input type="email" class="form-control" name="email">
+            </div>
+
+            <div class="form-group">
+                <label class="">
+                    Username
+                </label>
+                <input type="text" class="form-control" name="username">
+            </div>
+
+            <div class="form-group">
+                <label class="">
+                    รหัสผ่าน
+                </label>
+                <input type="password" class="form-control" name="password">
+            </div>
+
+            <div class="form-group">
+                <label class="">
+                    ยืนยันรหัสผ่าน
+                </label>
+                <input type="password" class="form-control" name="confirm_password">
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="">
+                    First Name
+                </label>
+                <input type="text" class="form-control" name="first_name">
+            </div>
+
+            <div class="form-group">
+                <label class="">
+                    Last Name
+                </label>
+                <input type="text" class="form-control" name="last_name">
+            </div>
+
+
+        </div>
+    </div>
+    <div class="form-group text-center">
+        <input type="submit" value="Register" class="btn btn-success">
+    </div>
+</form>
+<%- include ../layout/footer -%>
