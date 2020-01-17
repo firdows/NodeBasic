@@ -1,4 +1,3 @@
-
 var mongoose = require('mongoose');
 var mongoDB = 'mongodb://localhost:27017/NodeJsDB';
 var bcrypt = require('bcryptjs');
@@ -29,7 +28,7 @@ var userSchema = mongoose.Schema({
     },
 });
 
-var User=module.exports=mongoose.model('User',userSchema);
+var User=module.exports=mongoose.model('users',userSchema);
 
 module.exports.createUser=function(newUser,callback){
 
@@ -51,6 +50,12 @@ module.exports.getUserByName=function(username,callback){
         username:username
     };
     User.findOne(query,callback);
+ }
+
+ module.exports.comparePassword=function(password,hash,callback){   
+    bcrypt.compare(password,hash,function(err,isMatch){
+        callback(null,isMatch);
+    })
  }
 
 

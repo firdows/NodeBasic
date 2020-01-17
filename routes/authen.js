@@ -14,12 +14,23 @@ passport.deserializeUser(function (id, done) {
         done(err, user);
     });
 });
-passport.use(new LocalStrategy((username,password,done)=>{
-    User.getUserByName(username,(err,user)=>{
-        if(err) throw error;
-        console.log('GET User');
-        console.log(user);
-        //res.redirect('/');
+passport.use(new LocalStrategy((username, password, done) => {
+    User.getUserByName(username, (err, user) => {
+        if (err) throw error;
+
+        // res.location("/");
+        // res.redirect('/');
+        if (!user) {
+            done(null, false);
+        } else {
+            console.log('-- GET User --');
+            console.log(user);
+            User.comparePassword(password, user.password, function (err,isMatch) {
+                callback(null,isMatch);
+            });
+        }
+
+
     });
 }));
 
@@ -36,16 +47,21 @@ router.get('/login', function (req, res, next) {
     res.render('authen/login', { title: '::Login::' });
 });
 router.post('/login', passport.authenticate('local', {
+    successRedirect: '/',
     failureRedirect: '/authen/register',
     failureFlash: false
 }), function (req, res, next) {
+    // res.location("/");
     res.redirect('/');
 });
 
 
 /** Register */
 router.get('/register', function (req, res, next) {
-    res.render('authen/register', { title: 'Register' });
+    var newUser = new User();
+    console.log('newUser:');
+    console.log(newUser);
+    res.render('authen/register', { title: 'Register', value: newUser });
 });
 router.post('/register', [
     check('email', 'กรุณกรอก Email').not().isEmpty(),
@@ -63,15 +79,16 @@ router.post('/register', [
     var errors = result.errors;
     console.log(result);
     if (!result.isEmpty()) {
-        res.render('authen/register', { title: 'Register', errors: errors });
+        res.render('authen/register', { title: 'Register', errors: errors, value: req.body });
     } else {
         var data = req.body;
         // data.password = bcryptjs.genSaltSync(data.password);
 
         var newUser = new User(data);
         User.createUser(newUser, function (err, user) {
-            if (err) throw err;
+            if (err) throw error;
         });
+        console.log("--- Register Success ---");
         res.location("/");
         res.redirect("/");
     }
