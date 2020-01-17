@@ -20,7 +20,7 @@
 <body>
 
     <nav class="navbar navbar-expand-lg  navbar-dark bg-dark">
-        <a class="navbar-brand" href="/">NodeJs Dev</a>
+        <a class="navbar-brand" href="/">Ake A. Dev</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -45,21 +45,32 @@
                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                 </li> -->
             </ul>
-            <% if(locals.user){ %>
             <ul class="navbar-nav  mt-2 mt-md-0">
-                <li class="nav-item">
+                <% if(locals.user){ %>
+
+                <!-- <li class="nav-item">
                     <a class="nav-link" href="/authen/logout" data-method="post">Logout</a>
+                </li> -->
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        <%= locals.user.username %>
+                    </a>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="#">Action</a>
+                        <a class="dropdown-item" href="#">Another action</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="/authen/logout">Logout</a>
+                    </div>
                 </li>
-            </ul>
-            <% }else{ %>
-            <ul class="navbar-nav  mt-2 mt-md-0">
+                <% }else{ %>
                 <li class="nav-item">
                     <a class="nav-link" href="/authen/login">Login</a>
                 </li>
-            </ul>
-            <% } %>
+                <% } %>
         </div>
     </nav>
 
 
     <div class="container" style="padding-top: 20px;">
+        <%- messages() %>

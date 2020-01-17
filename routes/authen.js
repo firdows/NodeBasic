@@ -35,6 +35,7 @@ passport.use(new LocalStrategy(function (username, password, done) {
                     console.log("\x1b[32m", 'Password Match');
                     return done(null, user);
                 } else {
+                   // req.flash("alert-danger", "Password Not Match");
                     console.log("\x1b[31m", 'Password Not Match');
                     return done(null, false);
                 }
@@ -60,16 +61,18 @@ router.get('/login', function (req, res, next) {
 router.post('/login', passport.authenticate('local', {
     //successRedirect: '/test',
     failureRedirect: '/authen/login',
-    failureFlash: false
+    failureFlash: 'Login Failed !',
+    //failureMessage: 'alert-danger'
 }), function (req, res) {
     //res.location("/");
+    req.flash("alert-success", "Login Success");
     res.redirect('/');
 });
 
 /** Logout */
 router.get('/logout', function (req, res, next) {
     req.logout();
-    res.redirect('/');  
+    res.redirect('/');
 });
 
 
