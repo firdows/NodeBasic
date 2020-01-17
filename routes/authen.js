@@ -14,19 +14,30 @@ passport.deserializeUser(function (id, done) {
         done(err, user);
     });
 });
-passport.use(new LocalStrategy((username, password, done) => {
+passport.use(new LocalStrategy(function (username, password, done) {
     User.getUserByName(username, (err, user) => {
         if (err) throw error;
 
         // res.location("/");
         // res.redirect('/');
-        if (!user) {
-            done(null, false);
+        if (!user) {// ไม่พบ User
+            console.log("\x1b[31m", 'Not found user.');
+            return done(null, false);
         } else {
-            console.log('-- GET User --');
+            console.log("\x1b[34m", '-- GET User --');
             console.log(user);
-            User.comparePassword(password, user.password, function (err,isMatch) {
-                callback(null,isMatch);
+            //return done(null, user);
+            User.comparePassword(password, user.password, function (err, isMatch) {
+                if (err) return err;
+                console.log('-- Check Compare --');
+                console.log(isMatch);
+                if (isMatch) {// รหัสผ่านตรง
+                    console.log("\x1b[32m", 'Password Match');
+                    return done(null, user);
+                } else {
+                    console.log("\x1b[31m", 'Password Not Match');
+                    return done(null, false);
+                }
             });
         }
 
@@ -47,13 +58,15 @@ router.get('/login', function (req, res, next) {
     res.render('authen/login', { title: '::Login::' });
 });
 router.post('/login', passport.authenticate('local', {
-    successRedirect: '/',
-    failureRedirect: '/authen/register',
+    //successRedirect: '/test',
+    failureRedirect: '/authen/login',
     failureFlash: false
-}), function (req, res, next) {
-    // res.location("/");
+}), function (req, res) {
+    //res.location("/");
     res.redirect('/');
 });
+
+
 
 
 /** Register */

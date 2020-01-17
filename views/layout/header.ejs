@@ -20,7 +20,7 @@
 <body>
 
     <nav class="navbar navbar-expand-lg  navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">NodeJs Dev</a>
+        <a class="navbar-brand" href="/">NodeJs Dev</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
             aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -36,19 +36,28 @@
                 <!-- <li class="nav-item">
                     <a class="nav-link" href="/test">Test</a>
                 </li> -->
+                <% if(locals.user){ %>
                 <li class="nav-item">
                     <a class="nav-link" href="/blog">Blog</a>
                 </li>
+                <% } %>
                 <!-- <li class="nav-item">
                     <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
                 </li> -->
             </ul>
-
-            <ul class="navbar-nav  mt-2 mt-md-0">                
+            <% if(locals.user){ %>
+            <ul class="navbar-nav  mt-2 mt-md-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="/authen/logout" data-method="post">Logout</a>
+                </li>
+            </ul>
+            <% }else{ %>
+            <ul class="navbar-nav  mt-2 mt-md-0">
                 <li class="nav-item">
                     <a class="nav-link" href="/authen/login">Login</a>
                 </li>
             </ul>
+            <% } %>
         </div>
     </nav>
 

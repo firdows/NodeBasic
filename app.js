@@ -3,9 +3,14 @@ var express = require('express');
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
+var bcrypt = require('bcryptjs');
+
 var mongodb = require('mongodb');
 var mongoose = require('mongoose');
-var db=mongoose.connection;
+var db = mongoose.connection;
+
+
+var session = require('express-session');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 
@@ -27,19 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-app.use(passport.initialize());
-app.use(passport.session());
 
-app.use('/', indexRouter);
-app.use('/authen', authenRouter);
-app.use('/users', usersRouter);
-app.use('/blog', blogRouter);
-// app.use('/test', testRouter);
-
-// catch 404 and forward to error handler
-app.use(function (req, res, next) {
-    next(createError(404));
-});
 
 // error handler
 app.use(function (err, req, res, next) {
@@ -51,5 +44,34 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+
+// Sesstion First before passport
+app.use(session({
+    secret: '123456',
+    resave: false,
+    saveUninitialized: true,
+    //cookie: { secure: true }
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+
+
+// Use Route
+app.get("*", function (req, res, next) {
+    res.locals.user = req.user || null;
+    next();
+});
+
+app.use('/', indexRouter);
+app.use('/authen', authenRouter);
+app.use('/users', usersRouter);
+app.use('/blog', blogRouter);
+// app.use('/test', testRouter);
+// catch 404 and forward to error handler
+app.use(function (req, res, next) {
+    next(createError(404));
+});
+
 
 module.exports = app;
