@@ -51,6 +51,7 @@ app.use(session({
     secret: '123456',
     resave: false,
     saveUninitialized: true,
+    expires: new Date(Date.now() + (30 * 86400 * 1000))
     //cookie: { secure: true }
 }));
 app.use(passport.initialize());
@@ -58,9 +59,12 @@ app.use(passport.session());
 
 app.use(require('connect-flash')());
 app.use(function (req, res, next) {
-  res.locals.messages = require('express-messages')(req, res);
-  next();
+    res.locals.messages = require('express-messages')(req, res);
+    next();
 });
+
+
+
 
 
 // Use Route
@@ -76,7 +80,9 @@ app.use('/blog', blogRouter);
 // app.use('/test', testRouter);
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
-    next(createError(404));
+    //console.log(createError(404));
+    res.render('404', { err: createError(404) });
+    //next(createError(404));
 });
 
 
