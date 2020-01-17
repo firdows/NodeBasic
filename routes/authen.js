@@ -66,7 +66,11 @@ router.post('/login', passport.authenticate('local', {
     res.redirect('/');
 });
 
-
+/** Logout */
+router.get('/logout', function (req, res, next) {
+    req.logout();
+    res.redirect('/');  
+});
 
 
 /** Register */
