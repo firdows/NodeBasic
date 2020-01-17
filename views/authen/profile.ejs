@@ -1,0 +1,22 @@
+<%- include ../layout/header -%>
+
+
+<h1><%= title %></h1>
+
+
+<table class="table">
+    <tr>
+        <td>E-mail</td>
+        <td><%=value.email%></td>
+    </tr>
+    <tr>
+        <td>Username</td>
+        <td><%=value.username%></td>
+    </tr>
+    <tr>
+        <td>Fullname</td>
+        <td><%=value.first_name+ " " +value.last_name%></td>
+    </tr>
+</table>
+
+<%- include ../layout/footer -%>

@@ -5,6 +5,7 @@ var User = require('../models/User');
 //var bcryptjs = require('bcryptjs');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var auth = require('../components/authen');
 
 passport.serializeUser(function (user, done) {
     done(null, user.id)
@@ -35,7 +36,7 @@ passport.use(new LocalStrategy(function (username, password, done) {
                     console.log("\x1b[32m", 'Password Match');
                     return done(null, user);
                 } else {
-                   // req.flash("alert-danger", "Password Not Match");
+                    // req.flash("alert-danger", "Password Not Match");
                     console.log("\x1b[31m", 'Password Not Match');
                     return done(null, false);
                 }
@@ -114,6 +115,49 @@ router.post('/register', [
     }
     //console.log(req.body.email);
     // res.redirect('/');
+});
+
+
+/** Register */
+router.get('/profile', auth.enSureAuthenticated, function (req, res, next) {
+    console.log('data user:');
+    console.log(req.user);
+    res.render('authen/profile', { title: 'Profile', value: req.user });
+});
+
+/** Change Password */
+router.get('/change-password', auth.enSureAuthenticated, function (req, res, next) {
+    console.log('data user:');
+    console.log(req.user);
+    res.render('authen/change-password', { title: 'Change Password', value: req.user });
+});
+router.post('/change-password', [
+    check('old_password', 'กรุณกรอก password').not().isEmpty(),
+    check('new_password', 'กรุณกรอก new password').not().isEmpty(),
+    check('confirm_password', 'กรุณกรอก confirm password').not().isEmpty().custom((value, { req }) => {
+        if (req.body.new_password === value) {
+            return true;
+        } else {
+            return false;
+        }
+    }).withMessage("Passwords don't match."),
+], function (req, res, next) {
+    const result = validationResult(req);
+    var errors = result.errors;
+    //console.log(result);
+    if (!result.isEmpty()) {
+        res.render('authen/change-password', { title: 'Change Password', errors: errors, value: req.body });
+    } else {
+        console.log("--User--");
+        console.log(req.user);
+        var data = req.body;
+        User.changePassword(req.user, data.old_password, data.new_password, function (err, user) {
+            if (err) throw error;
+        });
+        // console.log("--- Register Success ---");
+        res.location("/");
+        res.redirect("/");
+    }
 });
 
 module.exports = router;

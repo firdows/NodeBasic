@@ -9,7 +9,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Jekyll v3.8.6">
-    <title><%=(title != undefined)?title:'Node basic'%></title>
+    <title><%=(typeof title !== 'undefined')?title:'Node basic'%></title>
 
     <!-- Bootstrap core CSS -->
     <link href="/bootstrap/bootstrap.min.css" rel="stylesheet">
@@ -56,9 +56,9 @@
                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <%= locals.user.username %>
                     </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
+                    <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/authen/profile">profile</a>
+                        <a class="dropdown-item" href="/authen/change-password">Change Password</a>
                         <div class="dropdown-divider"></div>
                         <a class="dropdown-item" href="/authen/logout">Logout</a>
                     </div>
